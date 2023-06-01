@@ -62,8 +62,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://10.0.0.18:3000',  # frontend
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'wsmapi.onrender.com',
-    '216.24.57.3:443',
+    'http://wsmapi.onrender.com',
+    'http://216.24.57.3:443',
 ]
 CORS_ALLOWED_ORIGINS = [
     'http://10.0.0.18:3000',
@@ -71,8 +71,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:9000',
     'http://127.0.0.1:3000',
-    'wsmapi.onrender.com',
-    '216.24.57.3:443',
+    'http://wsmapi.onrender.com',
+    'http://216.24.57.3:443',
 ]
 
 ROOT_URLCONF = 'backend.urls'
