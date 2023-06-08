@@ -52,7 +52,7 @@ def execute_script(request):
     script_directory_path = os.path.abspath(os.path.join(os.path.dirname(__file__), script_directory))
     os.chdir(script_directory_path)
 
-    result = subprocess.run(['python', 'main.py'], capture_output=True, text=True)
+    result = subprocess.run(['python', 'testscript.py'], capture_output=True, text=True)
     
     # Check for any errors during script execution
     if result.returncode != 0:
