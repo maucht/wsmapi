@@ -56,7 +56,7 @@ def execute_script(request):
     
     # Check for any errors during script execution
     if result.returncode != 0:
-        return JsonResponse({'error': 'Failed to execute script'})
+        return JsonResponse({'error': 'Failed to execute script: {error_message}'})
     
     # Process the script output
     output = result.stdout.strip()  # Modify as per your script's output format
