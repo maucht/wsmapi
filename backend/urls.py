@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from myapp.views import datas
+from myapp.views import execute_script
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/dailystats',csrf_exempt(datas), name="DailyStats")
+    path('api/dailystats',csrf_exempt(datas), name="DailyStats"),
+    path('execute-script',csrf_exempt(execute_script), name = "Script")
 ]

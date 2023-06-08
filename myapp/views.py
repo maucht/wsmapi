@@ -7,6 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+import subprocess
+from django.http import JsonResponse
+import os
+
 @api_view(['GET','POST'])
 def datas(request):
     info = DailyStats.objects.all()
@@ -41,5 +45,24 @@ def data(request,id):
         info.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     return Response({'data':serializer.data})
+
+def execute_script(request):
+    # Execute the Python script
+    script_directory = '../pyscript/'
+    script_directory_path = os.path.abspath(os.path.join(os.path.dirname(__file__), script_directory))
+    os.chdir(script_directory_path)
+
+    result = subprocess.run(['python', 'main.py'], capture_output=True, text=True)
+    
+    # Check for any errors during script execution
+    if result.returncode != 0:
+        return JsonResponse({'error': 'Failed to execute script'})
+    
+    # Process the script output
+    output = result.stdout.strip()  # Modify as per your script's output format
+    
+    # Return the output as the response
+    return JsonResponse({'output': output})
+
 
 

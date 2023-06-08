@@ -77,29 +77,7 @@ def getMoodRatio(totalMoodDict):
     ratioDict['trust'] = totalMoodDict['trust'] / totalCount
     
     return ratioDict # positive needs to be knocked down in sensitivity. way too sensitive.
-     
-def isLessThanMonthOld(submissionMonth, submissionDay): # there really isnt any need for this anymore i think
-    today = str(datetime.date.today())
-    todaySplit = today.split("-")
-    todayMonth = int(todaySplit[1])
-    todayDay = int(todaySplit[2])
-
-    #print(today)
-    #print(todayMonth)
-    #print(todayDay)  
-
-    # need to cover edge case -- December to January
-
-
-
-    if(todayMonth == submissionMonth): # if month == month (should never reach last year anyway)
-        return True
-    elif(abs(todayMonth-submissionMonth) == 1 and submissionDay > todayDay): # if last-ish month but less than a month old
-        return True
-    elif(submissionMonth == 12 and todayMonth == 1 and submissionDay > todayDay): # Case December...
-         return True
-    else:
-        return False
+    
 def sameDay(submissionDay): # dont need this
     today = str(datetime.date.today())
     todaySplit = today.split("-")
@@ -139,11 +117,11 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
 
     refinedEmotionScore = getRefinedIndividualMoodDict(emotion.raw_emotion_scores)
 
-    print("-------------------------------------------------")
-    print("COUNT", i)
+    #print("-------------------------------------------------")
+    #print("COUNT", i)
     
-    print(submission.selftext)
-    print(refinedEmotionScore)
+    #print(submission.selftext)
+    #print(refinedEmotionScore)
     
 
     # outfile.write(submission.selftext) 
