@@ -11,6 +11,8 @@ import subprocess
 from django.http import JsonResponse
 import os
 
+import nltk
+
 @api_view(['GET','POST'])
 def datas(request):
     info = DailyStats.objects.all()
@@ -48,11 +50,13 @@ def data(request,id):
 
 def execute_script(request):
     # Execute the Python script
+    nltk.download("punkt")
+
     script_directory = '../pyscript/'
     script_directory_path = os.path.abspath(os.path.join(os.path.dirname(__file__), script_directory))
     os.chdir(script_directory_path)
 
-    result = subprocess.run(['python', 'testscript.py'], capture_output=True, text=True)
+    result = subprocess.run(['python', 'main.py'], capture_output=True, text=True)
     
     # Check for any errors during script execution
     if result.returncode != 0:

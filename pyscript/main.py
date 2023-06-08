@@ -5,6 +5,9 @@ from hidden import USER
 
 from nrclex import NRCLex
 
+import nltk
+nltk.download("punkt")
+
 import praw
 import datetime
 
