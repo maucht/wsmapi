@@ -15,7 +15,8 @@ import datetime
 # it falls under the category of Natural Language Processing
 
 
-def getRefinedIndividualMoodDict(currMoodDict): # run in each submission iteration, end result should be only positive/negative
+def getRefinedIndividualMoodDict(currMoodDict): 
+    # run in each submission iteration, end result should be only positive/negative
     refinedDict = {}
     IRREV_MODIFER = 1
     if(currMoodDict['positive'] > currMoodDict['negative']):
@@ -65,7 +66,7 @@ def getMoodRatio(totalMoodDict):
     totalCount = 0
     ratioDict = {}
     for key in totalMoodDict:
-        totalCount+=totalMoodDict[key]
+        totalCount += totalMoodDict[key]
 
     # perhaps setprecision to 2 float
     ratioDict['anger'] = totalMoodDict['anger'] / totalCount
@@ -79,70 +80,81 @@ def getMoodRatio(totalMoodDict):
     ratioDict['surprise'] = totalMoodDict['surprise'] / totalCount
     ratioDict['trust'] = totalMoodDict['trust'] / totalCount
     
-    return ratioDict # positive needs to be knocked down in sensitivity. way too sensitive.
-    
-def sameDay(submissionDay): # dont need this
-    today = str(datetime.date.today())
-    todaySplit = today.split("-")
-    todayDay = int(todaySplit[2])
-
-    if(submissionDay == todayDay or submissionDay == (todayDay - 1)):
-        return True
-    else:
-        return False
+    return ratioDict
 
 reddit = praw.Reddit(
     client_id=CLIENT_ID,
     client_secret=SECRET,
     user_agent="my user agent",
 )
-i=0
 
-outfile = open('./submissioncontent.txt', 'w', encoding="utf-8")
+today = datetime.date.today()
+start_time = datetime.datetime.combine(today, datetime.datetime.min.time())
+start_epoch = int(start_time.timestamp())
+end_time = datetime.datetime.combine(today, datetime.datetime.max.time())
+end_epoch = int(end_time.timestamp())
 
+yesterday_start_time = start_time - datetime.timedelta(days=1)
+yesterday_end_time = end_time - datetime.timedelta(days=1)
+yesterday_start_epoch = int(yesterday_start_time.timestamp())
+yesterday_end_epoch = int(yesterday_end_time.timestamp())
 
 totalMoodDict = {}
-i = 0
-for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=200)):
-    i += 1
-    
+
+# Loop for today's posts
+for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=100)):
     submission_utc = submission.created_utc
     submission_date_time_string = str(datetime.datetime.fromtimestamp(submission_utc))
     submission_date_split = submission_date_time_string.split("-")
     submission_month = int(submission_date_split[1])
     submission_day = int(submission_date_split[2][0:2])
-    
+
+    # Skip posts that are not from today
+    if submission_month != today.month or submission_day != today.day:
+        continue
+
     emotion = NRCLex(submission.selftext)
 
-
-    if('positive' not in emotion.raw_emotion_scores or 'negative' not in emotion.raw_emotion_scores):
+    if 'positive' not in emotion.raw_emotion_scores or 'negative' not in emotion.raw_emotion_scores:
         continue
 
     refinedEmotionScore = getRefinedIndividualMoodDict(emotion.raw_emotion_scores)
 
-    #print("-------------------------------------------------")
-    #print("COUNT", i)
-    
-    #print(submission.selftext)
-    #print(refinedEmotionScore)
-    
-
-    # outfile.write(submission.selftext) 
-    # dont really need this
-    
     for key in refinedEmotionScore:
-        if(key not in totalMoodDict):
+        if key not in totalMoodDict:
             totalMoodDict[key] = refinedEmotionScore[key]
         else:
-            totalMoodDict[key] += refinedEmotionScore[key] 
-    #if(i == 500): # uncomment this and set limit to 1000 to create two batches
-        #print(totalMoodDict)
-        #totalMoodDict = {}
-print(totalMoodDict) # this works great.
-outfile.close()
+            totalMoodDict[key] += refinedEmotionScore[key]
+print(totalMoodDict)
+totalMoodDict = {}
 
-# send this data to django backend, then pickup from the frontend
-# create a horizontal slider scale on the frontend
-# if dict is 50/50, slider position should be in middle (Neutral)
+# Loop for posts from 24-48 hours ago
+for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=100)):
+    submission_utc = submission.created_utc
+    submission_date_time_string = str(datetime.datetime.fromtimestamp(submission_utc))
+    submission_date_split = submission_date_time_string.split("-")
+    submission_month = int(submission_date_split[1])
+    submission_day = int(submission_date_split[2][0:2])
 
-    
+    # Skip posts that are not from 24-48 hours ago
+    if submission_month != yesterday_start_time.month or submission_day < yesterday_start_time.day or submission_day > yesterday_end_time.day:
+        continue
+
+    emotion = NRCLex(submission.selftext)
+
+    if 'positive' not in emotion.raw_emotion_scores or 'negative' not in emotion.raw_emotion_scores:
+        continue
+
+    refinedEmotionScore = getRefinedIndividualMoodDict(emotion.raw_emotion_scores)
+
+    for key in refinedEmotionScore:
+        if key not in totalMoodDict:
+            totalMoodDict[key] = refinedEmotionScore[key]
+        else:
+            totalMoodDict[key] += refinedEmotionScore[key]
+
+print(totalMoodDict)
+
+# Send this data to the Django backend and pick it up from the frontend
+# Create a horizontal slider scale on the frontend
+# If the dictionary is 50/50, the slider position should be in the middle (neutral)
