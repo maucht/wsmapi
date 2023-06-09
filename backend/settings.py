@@ -62,6 +62,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://10.0.0.18:3000',  # frontend
+    'http://10.0.0.11:3000',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://wsmapi.onrender.com',
@@ -69,6 +70,7 @@ CORS_ORIGIN_WHITELIST = [
 ]
 CORS_ALLOWED_ORIGINS = [
     'http://10.0.0.18:3000',
+    'http://10.0.0.11:3000',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:9000',
