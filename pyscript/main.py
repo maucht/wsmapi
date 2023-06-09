@@ -103,7 +103,7 @@ outfile = open('./submissioncontent.txt', 'w', encoding="utf-8")
 
 totalMoodDict = {}
 i = 0
-for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=1000)):
+for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=500)):
     i += 1
     
     submission_utc = submission.created_utc
@@ -135,9 +135,9 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
             totalMoodDict[key] = refinedEmotionScore[key]
         else:
             totalMoodDict[key] += refinedEmotionScore[key] 
-    if(i == 500):
-        print(totalMoodDict)
-        totalMoodDict = {}
+    #if(i == 500): # uncomment this and set limit to 1000 to create two batches
+        #print(totalMoodDict)
+        #totalMoodDict = {}
 print(totalMoodDict) # this works great.
 outfile.close()
 
