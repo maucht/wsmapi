@@ -103,7 +103,7 @@ outfile = open('./submissioncontent.txt', 'w', encoding="utf-8")
 
 totalMoodDict = {}
 i = 0
-for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=500)):
+for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.subreddit("wallstreetbets").new(limit=200)):
     i += 1
     
     submission_utc = submission.created_utc
