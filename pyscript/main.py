@@ -11,6 +11,8 @@ nltk.download("punkt")
 import praw
 import datetime
 
+from django.http import JsonResponse
+
 # emotion detection does count as AI btw according to chatgpt
 # it falls under the category of Natural Language Processing
 
@@ -125,7 +127,8 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
             totalMoodDict[key] = refinedEmotionScore[key]
         else:
             totalMoodDict[key] += refinedEmotionScore[key]
-print(totalMoodDict)
+#print({"today":totalMoodDict})
+printHash = totalMoodDict
 totalMoodDict = {}
 
 # Loop for posts from 24-48 hours ago
@@ -153,7 +156,14 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
         else:
             totalMoodDict[key] += refinedEmotionScore[key]
 
-print(totalMoodDict)
+print(printHash["positive"],end=".")
+print(printHash["negative"],end=".")
+print(totalMoodDict["positive"],end=".")
+print(totalMoodDict["negative"],end=".")
+#print({"today": printHash, "yesterday":totalMoodDict})
+#return JsonResponse({data: {"today": printHash, "yesterday":totalMoodDict}})
+
+#print({"yesterday":totalMoodDict})
 
 # Send this data to the Django backend and pick it up from the frontend
 # Create a horizontal slider scale on the frontend

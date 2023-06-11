@@ -63,9 +63,22 @@ def execute_script(request):
     
     # Process the script output
     output = result.stdout.strip()  # Modify as per your script's output format
+    splitOutput = output.split(".")
+
+    jsonOutput = {
+        "today": {
+            "positive" : splitOutput[0],
+            "negative" : splitOutput[1]
+        },
+        "yesterday" : {
+            "positive" : splitOutput[2],
+            "negative" : splitOutput[3]
+        }
+    }
+
     
     # Return the output as the response
-    return JsonResponse({'output': output})
+    return JsonResponse({'output': jsonOutput})
 
 
 
