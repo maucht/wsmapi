@@ -67,6 +67,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
     'http://wsmapi.onrender.com',
     'http://216.24.57.3:443',
+    'https://eclectic-biscuit-9a6cb6.netlify.app'
 ]
 CORS_ALLOWED_ORIGINS = [
     'http://10.0.0.18:3000',
@@ -77,6 +78,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://wsmapi.onrender.com',
     'http://216.24.57.3:443',
+    'https://eclectic-biscuit-9a6cb6.netlify.app'
 ]
 
 ROOT_URLCONF = 'backend.urls'

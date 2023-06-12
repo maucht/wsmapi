@@ -156,15 +156,9 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
         else:
             totalMoodDict[key] += refinedEmotionScore[key]
 
+# print out data to handle in django views
 print(printHash["positive"],end=".")
 print(printHash["negative"],end=".")
 print(totalMoodDict["positive"],end=".")
 print(totalMoodDict["negative"],end=".")
-#print({"today": printHash, "yesterday":totalMoodDict})
-#return JsonResponse({data: {"today": printHash, "yesterday":totalMoodDict}})
 
-#print({"yesterday":totalMoodDict})
-
-# Send this data to the Django backend and pick it up from the frontend
-# Create a horizontal slider scale on the frontend
-# If the dictionary is 50/50, the slider position should be in the middle (neutral)
