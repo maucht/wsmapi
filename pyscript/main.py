@@ -6,7 +6,10 @@ from hidden import USER
 from nrclex import NRCLex
 
 import nltk
-nltk.download("punkt")
+try:
+    nltk.download("punkt")
+except Exception:
+    pass
 
 import praw
 import datetime
@@ -128,7 +131,12 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
         else:
             totalMoodDict[key] += refinedEmotionScore[key]
 #print({"today":totalMoodDict})
-printHash = totalMoodDict
+printHash = {}
+if "positive" in totalMoodDict:
+    printHash = totalMoodDict
+else:
+    printHash["positive"] = 1
+    printHash["negative"] = 1
 totalMoodDict = {}
 
 # Loop for posts from 24-48 hours ago
@@ -157,6 +165,10 @@ for submission in filter(lambda s: s.media is None and s.selftext != '', reddit.
             totalMoodDict[key] += refinedEmotionScore[key]
 
 # print out data to handle in django views
+if "positive" not in totalMoodDict:
+    totalMoodDict["positive"] = 1
+    totalMoodDict["negative"] = 1
+
 print(printHash["positive"],end=".")
 print(printHash["negative"],end=".")
 print(totalMoodDict["positive"],end=".")
